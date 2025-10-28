@@ -28,11 +28,11 @@ import {
   AlertCircle,
   Info
 } from 'lucide-react';
-import { ircaCenters } from '../data/centers';
+import { getCenterById } from '../data/centers';
 
 const CenterDetailPage = () => {
   const { id } = useParams<{ id: string }>();
-  const center = ircaCenters.find(c => c.id === parseInt(id || '1'));
+  const center = getCenterById(parseInt(id || '1'));
 
   if (!center) {
     return (
@@ -58,9 +58,7 @@ const CenterDetailPage = () => {
     );
   }
 
-  const relatedCenters = ircaCenters
-    .filter(c => c.district === center.district && c.id !== center.id)
-    .slice(0, 3);
+  const relatedCenters: any[] = [];
 
   return (
     <div className="min-h-screen bg-background">
@@ -92,10 +90,10 @@ const CenterDetailPage = () => {
                 <div className="flex items-start justify-between">
                   <div>
                     <h1 className="text-4xl lg:text-5xl font-heading font-bold text-primary mb-4 leading-tight">
-                      {center.name}
+                      {center?.name || center?.hospital || center?.specialty}
                     </h1>
                     <div className="flex items-center space-x-3 mb-6">
-                      <Badge className="bg-secondary/10 text-secondary border-secondary/20 font-semibold px-3 py-1">📍 {center.district}</Badge>
+                      <Badge className="bg-secondary/10 text-secondary border-secondary/20 font-semibold px-3 py-1">📍 {center?.district}</Badge>
                       <Badge className="bg-success/10 text-success border-success/20 font-semibold px-3 py-1">
                         <Shield className="mr-1 h-3 w-3" />
                         ✓ Verified
@@ -105,13 +103,13 @@ const CenterDetailPage = () => {
                 </div>
 
                 <p className="text-foreground text-lg leading-relaxed">
-                  {center.address}
+                  {center?.address || center?.city || center?.affiliation}
                 </p>
 
                 <div className="flex flex-wrap items-center gap-6 text-sm">
                   <div className="flex items-center space-x-2 px-3 py-2 bg-primary/5 rounded-lg">
                     <Bed className="h-5 w-5 text-primary" />
-                    <span className="font-semibold text-foreground">{center.beds} beds</span>
+                    <span className="font-semibold text-foreground">{center?.beds || 'N/A'} beds</span>
                   </div>
                   <div className="flex items-center space-x-2 px-3 py-2 bg-primary/5 rounded-lg">
                     <Users className="h-5 w-5 text-primary" />
@@ -198,14 +196,14 @@ const CenterDetailPage = () => {
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <p className="text-muted-foreground">
-                      {center.name} is a government-verified rehabilitation center dedicated to
+                      {center?.name || center?.hospital || center?.specialty} is a government-verified rehabilitation center dedicated to
                       providing comprehensive care for individuals struggling with addiction.
                       Our evidence-based treatment programs are designed to support long-term recovery.
                     </p>
 
                     <div className="grid grid-cols-2 gap-4">
                       <div className="text-center p-4 bg-primary/5 rounded-lg">
-                        <div className="text-2xl font-bold text-primary">{center.beds}</div>
+                        <div className="text-2xl font-bold text-primary">{center?.beds || 'N/A'}</div>
                         <div className="text-sm text-muted-foreground">Treatment Beds</div>
                       </div>
                       <div className="text-center p-4 bg-success/5 rounded-lg">
@@ -397,14 +395,14 @@ const CenterDetailPage = () => {
                       <Mail className="h-5 w-5 text-primary" />
                       <div>
                         <p className="font-medium">Email Address</p>
-                        <p className="text-muted-foreground">info@{center.name.toLowerCase().replace(/\s+/g, '')}.org</p>
+                        <p className="text-muted-foreground">info@{center?.name?.toLowerCase().replace(/\s+/g, '') || center?.hospital?.toLowerCase().replace(/\s+/g, '') || 'center'}.org</p>
                       </div>
                     </div>
                     <div className="flex items-center space-x-3">
                       <MapPin className="h-5 w-5 text-primary" />
                       <div>
                         <p className="font-medium">Address</p>
-                        <p className="text-muted-foreground">{center.address}</p>
+                        <p className="text-muted-foreground">{center?.address || center?.city}</p>
                       </div>
                     </div>
                     <div className="flex items-center space-x-3">
@@ -488,25 +486,25 @@ const CenterDetailPage = () => {
         <section className="py-12 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <h2 className="text-2xl font-heading font-bold text-primary mb-6">
-              Other Centers in {center.district}
+              Other Centers in {center?.district}
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {relatedCenters.map((relatedCenter) => (
+              {relatedCenters.map((relatedCenter: any) => (
                 <Card key={relatedCenter.id} className="hover:shadow-md transition-shadow">
                   <CardHeader>
                     <CardTitle className="text-lg line-clamp-2">
-                      {relatedCenter.name}
+                      {relatedCenter.hospital}
                     </CardTitle>
-                    <Badge variant="district">{relatedCenter.district}</Badge>
+                    <Badge variant="district">{relatedCenter.city}</Badge>
                   </CardHeader>
                   <CardContent>
                     <p className="text-sm text-muted-foreground mb-4 line-clamp-2">
-                      {relatedCenter.address}
+                      {relatedCenter.details}
                     </p>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-1 text-sm text-muted-foreground">
                         <Bed className="h-4 w-4" />
-                        <span>{relatedCenter.beds} beds</span>
+                        <span>N/A beds</span>
                       </div>
                       <Button size="sm" asChild>
                         <Link to={`/center/${relatedCenter.id}`}>

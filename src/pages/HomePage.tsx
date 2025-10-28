@@ -18,58 +18,96 @@ import {
   Filter,
   ArrowRight,
   Map,
-  Calendar
+  Calendar,
+  ChevronDown,
+  Building,
+  Hospital,
+  User
 } from 'lucide-react';
-import { ircaCenters, districts } from '../data/centers';
+import {
+  ircas_government,
+  ircas_private,
+  hospitals_gov,
+  hospitals_private,
+  psychiatrists
+} from '../data/centers';
+import { getDistrictNames } from '../data/karnatakaData';
 import MapComponent from '../components/MapComponent';
 
 const HomePage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedDistrict, setSelectedDistrict] = useState<string>('all');
   const [sortBy, setSortBy] = useState<string>('name');
+  const [dropdownOpen, setDropdownOpen] = useState<string | null>(null);
+
+  const allFacilities = useMemo(() => [
+    ...ircas_government.map(center => ({ ...center, type: 'irca', category: 'government' })),
+    ...ircas_private.map(center => ({ ...center, type: 'irca', category: 'private' })),
+    ...hospitals_gov.map(hospital => ({ ...hospital, type: 'hospital', category: 'government' })),
+    ...hospitals_private.map(hospital => ({ ...hospital, type: 'hospital', category: 'private' })),
+    ...psychiatrists.map(psychiatrist => ({ ...psychiatrist, type: 'psychiatrist', category: null }))
+  ], []);
 
   const filteredAndSortedCenters = useMemo(() => {
-    let filtered = ircaCenters;
+    let filtered = allFacilities;
 
     // Filter by search term
     if (searchTerm) {
-      filtered = filtered.filter(center =>
-        center.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        center.district.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        center.address.toLowerCase().includes(searchTerm.toLowerCase())
-      );
+      filtered = filtered.filter(center => {
+        const nameToSearch = (center as any).name || (center as any).hospital || (center as any).city || '';
+        const districtToSearch = (center as any).district || (center as any).city?.split(',')[0].trim() || '';
+        const addressToSearch = (center as any).address || (center as any).details || (center as any).affiliation || '';
+        return nameToSearch.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                districtToSearch.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                addressToSearch.toLowerCase().includes(searchTerm.toLowerCase());
+      });
     }
 
     // Filter by district
     if (selectedDistrict !== 'all') {
-      filtered = filtered.filter(center => center.district === selectedDistrict);
+      filtered = filtered.filter(center =>
+        (center as any).district === selectedDistrict ||
+        ((center as any).city && (center as any).city.includes(selectedDistrict))
+      );
     }
 
     // Sort centers
     filtered.sort((a, b) => {
+      const aName = (a as any).name || (a as any).hospital || (a as any).city || '';
+      const bName = (b as any).name || (b as any).hospital || (b as any).city || '';
       switch (sortBy) {
         case 'name':
-          return a.name.localeCompare(b.name);
+          return aName.localeCompare(bName);
         case 'district':
-          return a.district.localeCompare(b.district);
+          const aDistrict = (a as any).district || ((a as any).city?.split(',')[0].trim()) || '';
+          const bDistrict = (b as any).district || ((b as any).city?.split(',')[0].trim()) || '';
+          return aDistrict.localeCompare(bDistrict);
         case 'beds':
-          return b.beds - a.beds;
+          return ((b as any).beds || 0) - ((a as any).beds || 0);
         default:
           return 0;
       }
     });
 
     return filtered;
-  }, [searchTerm, selectedDistrict, sortBy]);
+  }, [searchTerm, selectedDistrict, sortBy, allFacilities]);
 
-  const stats = {
-    centers: ircaCenters.length,
-    beds: ircaCenters.reduce((total, center) => total + center.beds, 0),
-    districts: new Set(ircaCenters.map(center => center.district)).size,
+  const districts = useMemo(() => getDistrictNames(), []);
+  const stats = useMemo(() => ({
+    centers: allFacilities.length,
+    beds: allFacilities.reduce((total, center) => total + ((center as any).beds || 0), 0),
+    districts: districts.length,
+  }), [allFacilities]);
+
+  // Close dropdown when clicking outside
+  const handleClickOutside = (e: React.MouseEvent) => {
+    if (!(e.target as Element).closest('.dropdown-container')) {
+      setDropdownOpen(null);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background" onClick={handleClickOutside}>
       {/* Hero Section */}
       <section className="relative hero-gradient text-white overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/5 to-transparent"></div>
@@ -90,20 +128,10 @@ const HomePage = () => {
                   <span className="bg-gradient-to-r from-accent via-accent to-secondary bg-clip-text text-transparent">One Step at a Time</span>
                 </h1>
                 <p className="text-lg lg:text-xl text-white/95 max-w-2xl leading-relaxed font-light">
-                  Karnataka's comprehensive network of 33 Integrated Rehabilitation Centres for Addicts (IRCA), providing compassionate care and evidence-based treatment across the state.
+                  Karnataka's comprehensive network of rehabilitation centers, hospitals, and psychiatrists, providing compassionate care and evidence-based treatment across the state.
                 </p>
               </div>
 
-              <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                <Button size="lg" className="btn-primary shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 font-semibold">
-                  <Search className="mr-2 h-5 w-5" />
-                  Find a Center
-                </Button>
-                <Button size="lg" className="bg-white/20 border border-white/40 text-white hover:bg-white/30 backdrop-blur-sm font-semibold transition-all duration-200">
-                  <Phone className="mr-2 h-5 w-5" />
-                  Emergency Helpline
-                </Button>
-              </div>
             </div>
 
             <div className="grid grid-cols-2 gap-6 animate-fade-in" style={{ animationDelay: '0.2s' }}>
@@ -133,17 +161,17 @@ const HomePage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-heading font-bold text-primary mb-4">
-              Find Centers Near You
+              Explore Karnataka Districts
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Explore our interactive map to locate rehabilitation centers across Karnataka.
-              Click on markers to view center details and get directions.
+              Explore our interactive map to locate rehabilitation centers, hospitals, and psychiatrists across Karnataka.
+              Click on markers to view facility details and get directions.
             </p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <div className="lg:col-span-2">
-              <MapComponent className="h-[500px] lg:h-[600px] rounded-xl shadow-lg border border-border" />
+            <div className="lg:col-span-2 relative">
+              <MapComponent className="h-[500px] lg:h-[600px] rounded-xl shadow-lg border border-border relative z-10" />
             </div>
 
             <div className="space-y-6">
@@ -249,7 +277,7 @@ const HomePage = () => {
               <div className="flex items-center space-x-2">
                 <div className="w-2 h-2 bg-success rounded-full"></div>
                 <p className="text-sm font-medium text-foreground">
-                  Showing <span className="font-bold text-primary">{filteredAndSortedCenters.length}</span> of <span className="font-bold text-primary">{ircaCenters.length}</span> centers
+                  Showing <span className="font-bold text-primary">{filteredAndSortedCenters.length}</span> of <span className="font-bold text-primary">{allFacilities.length}</span> facilities
                 </p>
               </div>
               <Button className="btn-primary font-semibold shadow-md hover:shadow-lg transition-all">
@@ -269,11 +297,11 @@ const HomePage = () => {
               <Badge className="bg-primary/10 text-primary border border-primary/20 font-semibold">Our Network</Badge>
             </div>
             <h2 className="text-4xl font-heading font-bold text-primary mb-4">
-              Rehabilitation Centers
+              Healthcare Facilities
             </h2>
             <p className="text-lg text-muted-foreground max-w-3xl leading-relaxed">
-              Discover our network of government-verified rehabilitation centers across Karnataka,
-              each providing comprehensive care and support for addiction recovery.
+              Discover our comprehensive network of rehabilitation centers, hospitals, and psychiatrists across Karnataka,
+              each providing specialized care and support for addiction recovery and mental health services.
             </p>
           </div>
 
@@ -296,18 +324,21 @@ const HomePage = () => {
                   style={{ animationDelay: `${index * 100}ms` }}
                 >
                   <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                  
+
                   <CardHeader className="pb-4 relative">
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex-1">
                         <CardTitle className="text-xl font-heading text-primary line-clamp-2 group-hover:text-primary/80 transition-colors">
-                          {center.name}
+                          {(center as any).name || (center as any).hospital || (center as any).city}
                         </CardTitle>
                         <Badge variant="secondary" className="mt-3 bg-secondary/10 text-secondary border-secondary/20 font-medium">
-                          📍 {center.district}
+                          📍 {(center as any).district || ((center as any).city?.split(',')[0].trim())}
+                        </Badge>
+                        <Badge variant="outline" className="mt-2 text-xs">
+                          {center.type === 'irca' ? 'IRCA Center' : center.type === 'hospital' ? 'Hospital' : 'Psychiatrist'}
                         </Badge>
                       </div>
-                      {center.verified && (
+                      {(center as any).verified && (
                         <Badge variant="success" className="text-xs font-bold bg-success/10 text-success border-success/20">
                           ✓ Verified
                         </Badge>
@@ -317,7 +348,7 @@ const HomePage = () => {
 
                   <CardContent className="space-y-5 relative">
                     <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
-                      {center.address}
+                      {(center as any).address || (center as any).details || (center as any).affiliation}
                     </p>
 
                     <div className="grid grid-cols-2 gap-4 py-3 px-3 bg-background/50 rounded-lg border border-border/50">
@@ -326,8 +357,8 @@ const HomePage = () => {
                           <Bed className="h-4 w-4 text-primary" />
                         </div>
                         <div>
-                          <p className="text-xs text-muted-foreground font-medium">Beds</p>
-                          <p className="text-sm font-bold text-primary">{center.beds}</p>
+                          <p className="text-xs text-muted-foreground font-medium">Capacity</p>
+                          <p className="text-sm font-bold text-primary">{(center as any).beds || 'N/A'}</p>
                         </div>
                       </div>
                       <div className="flex items-center space-x-2">
@@ -335,8 +366,8 @@ const HomePage = () => {
                           <Star className="h-4 w-4 text-warning" />
                         </div>
                         <div>
-                          <p className="text-xs text-muted-foreground font-medium">Status</p>
-                          <p className="text-sm font-bold text-warning">Approved</p>
+                          <p className="text-xs text-muted-foreground font-medium">Type</p>
+                          <p className="text-sm font-bold text-warning">{center.category || 'Specialist'}</p>
                         </div>
                       </div>
                     </div>

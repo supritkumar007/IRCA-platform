@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import L from 'leaflet';
-import { ircaCenters } from '../data/centers';
+import { ircas_government, ircas_private } from '../data/centers';
 
 // Karnataka center coordinates and bounds
 const KARNATAKA_CENTER: [number, number] = [15.3173, 75.7139];
@@ -10,8 +10,8 @@ const KARNATAKA_BOUNDS: [[number, number], [number, number]] = [
 ];
 
 interface MapComponentProps {
-  selectedCenter?: typeof ircaCenters[0] | null;
-  onCenterSelect?: (center: typeof ircaCenters[0]) => void;
+  selectedCenter?: any;
+  onCenterSelect?: (center: any) => void;
   className?: string;
 }
 
@@ -58,7 +58,8 @@ const MapComponent: React.FC<MapComponentProps> = ({
     });
 
     // Add markers for each center
-    ircaCenters.forEach((center) => {
+    const allCenters = [...ircas_government, ...ircas_private];
+    allCenters.forEach((center: any) => {
       if (center.coordinates) {
         const marker = L.marker([center.coordinates.lat, center.coordinates.lng], {
           icon: defaultIcon
@@ -84,7 +85,8 @@ const MapComponent: React.FC<MapComponentProps> = ({
 
     // Make selectCenter function available globally for popup buttons
     (window as any).selectCenter = (centerId: string) => {
-      const center = ircaCenters.find(c => c.id === parseInt(centerId));
+      const allCenters = [...ircas_government, ...ircas_private];
+      const center = allCenters.find((c: any) => c.id === parseInt(centerId));
       if (center && onCenterSelect) {
         onCenterSelect(center);
       }

@@ -7,40 +7,40 @@
 
 @layer base {
   :root {
-    /* IRCA Platform Color Scheme - HSL Values for Tailwind CSS */
-    --background: 210 17% 96%; /* #F5F7FA */
-    --foreground: 210 13% 28%; /* #2C3E50 */
+    /* Karnataka Government IRCA Platform Color Scheme - Professional & Trustworthy */
+    --background: 210 20% 98%; /* #FAFBFC - Clean, professional background */
+    --foreground: 210 15% 25%; /* #2D3748 - Darker for better readability */
     --card: 0 0% 100%;
-    --card-foreground: 210 13% 28%;
+    --card-foreground: 210 15% 25%;
     --popover: 0 0% 100%;
-    --popover-foreground: 210 13% 28%;
-    --primary: 202 61% 32%; /* #1B5E8A */
+    --popover-foreground: 210 15% 25%;
+    --primary: 210 25% 45%; /* #475C7A - New primary color */
     --primary-foreground: 0 0% 100%;
-    --secondary: 154 61% 42%; /* #27A870 */
-    --secondary-foreground: 0 0% 100%;
-    --muted: 214 13% 66%; /* #94A3B8 */
-    --muted-foreground: 210 13% 28%;
-    --accent: 154 61% 42%; /* #27A870 */
+    --secondary: 220 40% 90%; /* #E5EAF5 - New secondary color */
+    --secondary-foreground: 240 100% 20%; /* #1E1E5D - New foreground for secondary */
+    --muted: 210 15% 75%; /* #A0AEC0 - Softer gray for muted text */
+    --muted-foreground: 210 15% 25%;
+    --accent: 230 80% 75%; /* #92A5FD - New accent color */
     --accent-foreground: 0 0% 100%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: 210 14% 92%; /* #E0E7F1 */
-    --input: 210 14% 92%;
-    --ring: 202 61% 32%;
-    --success: 154 61% 42%; /* #10B981 */
-    --warning: 45 93% 58%; /* #F59E0B */
+    --border: 210 20% 88%; /* #CBD5E0 - Subtle borders */
+    --input: 210 20% 88%;
+    --ring: 210 25% 45%; /* #475C7A - Updated ring color */
+    --success: 220 100% 60%; /* #587FFC - New success color */
+    --warning: 230 80% 75%; /* #92A5FD - New warning color */
     --radius: 0.75rem;
 
     /* Fallback values for better browser support */
-    --background-fallback: #F5F7FA;
-    --foreground-fallback: #2C3E50;
-    --primary-fallback: #1B5E8A;
-    --secondary-fallback: #27A870;
-    --muted-fallback: #94A3B8;
-    --accent-fallback: #27A870;
-    --border-fallback: #E0E7F1;
-    --success-fallback: #10B981;
-    --warning-fallback: #F59E0B;
+    --background-fallback: #FAFBFC;
+    --foreground-fallback: #2D3748;
+    --primary-fallback: #475C7A;
+    --secondary-fallback: #E5EAF5;
+    --muted-fallback: #A0AEC0;
+    --accent-fallback: #92A5FD;
+    --border-fallback: #CBD5E0;
+    --success-fallback: #587FFC;
+    --warning-fallback: #92A5FD;
     
     /* Shadow variables */
     --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
@@ -49,8 +49,8 @@
     --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
     --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
     --shadow-2xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-    --shadow-primary: 0 10px 25px rgba(27, 94, 138, 0.3);
-    --shadow-secondary: 0 10px 25px rgba(39, 168, 112, 0.3);
+    --shadow-primary: 0 10px 25px rgba(71, 92, 122, 0.3);
+    --shadow-secondary: 0 10px 25px rgba(229, 234, 245, 0.3);
   }
 
   .light {
@@ -81,12 +81,12 @@
     border-color: hsl(var(--border, 224 231 241));
   }
   body {
-    background-color: #F5F7FA; /* Direct fallback color */
+    background-color: #FAFBFC; /* Direct fallback color */
     background-color: hsl(var(--background)); /* CSS variable with fallback */
-    color: #2C3E50; /* Direct fallback color */
+    color: #2D3748; /* Direct fallback color */
     color: hsl(var(--foreground)); /* CSS variable with fallback */
     font-family: 'Inter', system-ui, sans-serif;
-    line-height: 1.5;
+    line-height: 1.6;
     margin: 0;
     padding: 0;
   }
@@ -121,15 +121,15 @@
 
   /* Ensure CSS variables are applied with higher specificity */
   html {
-    --background: 210 17% 96%;
-    --foreground: 210 13% 28%;
-    --primary: 202 61% 32%;
-    --secondary: 154 61% 42%;
-    --accent: 154 61% 42%;
-    --muted: 214 13% 66%;
-    --border: 210 14% 92%;
-    --success: 154 61% 42%;
-    --warning: 45 93% 58%;
+    --background: 210 20% 98%;
+    --foreground: 210 15% 25%;
+    --primary: 210 25% 45%;
+    --secondary: 220 40% 90%;
+    --accent: 230 80% 75%;
+    --muted: 210 15% 75%;
+    --border: 210 20% 88%;
+    --success: 220 100% 60%;
+    --warning: 230 80% 75%;
   }
 
   /* Utility color classes */
@@ -183,7 +183,7 @@
 
   /* Critical styling for hero section */
   .hero-gradient {
-    background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--secondary)) 100%);
+    background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(var(--accent)) 50%, hsl(var(--secondary)) 100%);
   }
 
   /* Ensure buttons have proper styling */
@@ -197,9 +197,9 @@
   }
 
   .btn-primary:hover {
-    background-color: hsl(202 61% 25%);
+    background-color: hsl(210 20% 40%);
     transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(27, 94, 138, 0.3);
+    box-shadow: 0 10px 25px rgba(71, 92, 122, 0.3);
   }
 
   .btn-secondary {
@@ -212,9 +212,9 @@
   }
 
   .btn-secondary:hover {
-    background-color: hsl(154 61% 35%);
+    background-color: hsl(220 30% 85%);
     transform: translateY(-2px);
-    box-shadow: 0 10px 25px rgba(39, 168, 112, 0.3);
+    box-shadow: 0 10px 25px rgba(229, 234, 245, 0.3);
   }
 
   /* Enhanced Card Styles */
@@ -229,11 +229,11 @@
 
   /* Gradient Backgrounds */
   .gradient-primary {
-    background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(202 61% 25%) 100%);
+    background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(210 20% 40%) 100%);
   }
 
   .gradient-secondary {
-    background: linear-gradient(135deg, hsl(var(--secondary)) 0%, hsl(154 61% 35%) 100%);
+    background: linear-gradient(135deg, hsl(var(--secondary)) 0%, hsl(220 30% 85%) 100%);
   }
 
   .gradient-accent {
@@ -348,21 +348,21 @@
 
   /* Glow Effect */
   .glow-primary {
-    box-shadow: 0 0 20px rgba(27, 94, 138, 0.4);
+    box-shadow: 0 0 20px rgba(71, 92, 122, 0.4);
     transition: box-shadow 0.3s ease;
   }
 
   .glow-primary:hover {
-    box-shadow: 0 0 40px rgba(27, 94, 138, 0.6);
+    box-shadow: 0 0 40px rgba(71, 92, 122, 0.6);
   }
 
   .glow-secondary {
-    box-shadow: 0 0 20px rgba(39, 168, 112, 0.4);
+    box-shadow: 0 0 20px rgba(229, 234, 245, 0.4);
     transition: box-shadow 0.3s ease;
   }
 
   .glow-secondary:hover {
-    box-shadow: 0 0 40px rgba(39, 168, 112, 0.6);
+    box-shadow: 0 0 40px rgba(229, 234, 245, 0.6);
   }
 
   /* Scroll Reveal Animations */
@@ -395,7 +395,7 @@
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    background: linear-gradient(180deg, hsl(202 61% 25%), hsl(154 61% 35%));
+    background: linear-gradient(180deg, hsl(210 20% 40%), hsl(220 30% 85%));
   }
 
   /* Selection Styling */
@@ -524,6 +524,113 @@
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+  }
+
+  /* =============================================================================
+     CARD ANIMATION EFFECTS - Karnataka IRCA Platform
+     =============================================================================
+     Modern card animations for enhanced user experience and interactivity.
+
+     CLASSES:
+     - .card-enter: Staggered entrance animation with scale and translate
+     - .card-hover-lift: Hover lift effect with scale and shadow
+     - .card-parallax-bg: Parallax background movement on hover
+     - .hover-scale: Simple scale on hover
+     - .hover-rotate: Subtle rotation on hover
+     - .hover-glow: Glow effect on hover
+
+     USAGE:
+     - Apply to card containers for entrance animations
+     - Combine with animation-delay for staggered effects
+     - Use hover classes for interactive feedback
+
+     ACCESSIBILITY:
+     - All animations respect prefers-reduced-motion
+     - Hover effects have clear visual feedback
+     - Animations enhance rather than distract
+     ============================================================================= */
+
+  .card-enter {
+    animation: card-enter 0.6s ease-out forwards;
+  }
+
+  @keyframes card-enter {
+    0% {
+      opacity: 0;
+      transform: translateY(30px) scale(0.95);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  .card-hover-lift {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .card-hover-lift:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  }
+
+  .card-parallax-bg {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card-parallax-bg::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+    transform: translateX(-10px) translateY(-10px);
+    transition: transform 0.3s ease;
+  }
+
+  .card-parallax-bg:hover::before {
+    transform: translateX(0) translateY(0);
+  }
+
+  /* Interactive Hover Effects */
+  .hover-scale {
+    transition: transform 0.3s ease;
+  }
+
+  .hover-scale:hover {
+    transform: scale(1.05);
+  }
+
+  .hover-rotate {
+    transition: transform 0.3s ease;
+  }
+
+  .hover-rotate:hover {
+    transform: rotate(2deg);
+  }
+
+  .hover-glow {
+    transition: box-shadow 0.3s ease;
+  }
+
+  .hover-glow:hover {
+    box-shadow: 0 0 30px rgba(146, 165, 253, 0.5);
+  }
+
+  /* Respect user preferences for reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .card-enter,
+    .card-hover-lift,
+    .card-parallax-bg,
+    .hover-scale,
+    .hover-rotate,
+    .hover-glow {
+      animation: none;
+      transition: none;
+    }
   }
 
   /* Smooth Transitions */
